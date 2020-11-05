@@ -37,6 +37,13 @@ export class UsuariosService {
     return this.usuariosRepository.findOne(id);
   }
 
+  async findOneByNomeUsuario(usuario: string): Promise<Usuario> {
+    return await this.usuariosRepository.findOne({
+      where: { usuario: usuario.toLowerCase() },
+      select: ['id', 'senha', 'usuario'],
+    });
+  }
+
   async updateOne(id: number, updateUsuario: Usuario): Promise<Usuario> {
     updateUsuario.usuario = updateUsuario.usuario.toLowerCase();
 

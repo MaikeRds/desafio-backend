@@ -7,10 +7,13 @@ import {
   Put,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsuariosService } from 'src/services/usuarios.service';
 import { Usuario } from 'src/model/usuario.entity';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private usuariosService: UsuariosService) {}

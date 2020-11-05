@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { AppController } from './app.controller';
 import { Usuario } from './model/usuario.entity';
 import { UsuariosController } from './controllers/usuarios.controller';
 import { UsuariosService } from './services/usuarios.service';
+import { AuthService } from './services/auth.service';
+import { AuthController } from './controllers/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { LocalStrategy } from './shared/strategies/local.strategy';
+import { JwtStrategy } from './shared/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -25,8 +29,12 @@ import { UsuariosService } from './services/usuarios.service';
       logging: true,
     }),
     TypeOrmModule.forFeature([Usuario]),
+    JwtModule.register({
+      secret: process.env.APP_KEY,
+      signOptions: { expiresIn: '2h' },
+    }),
   ],
-  controllers: [AppController, UsuariosController],
-  providers: [UsuariosService],
+  controllers: [AppController, UsuariosController, AuthController],
+  providers: [UsuariosService, AuthService, LocalStrategy, JwtStrategy],
 })
 export class AppModule {}
