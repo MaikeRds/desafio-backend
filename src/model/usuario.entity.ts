@@ -4,23 +4,18 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { IUsuario } from 'src/shared/interfaces/IUsuario';
 
-@Entity()
-export class Usuario {
+@Entity('usuarios')
+export class Usuario implements IUsuario {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  nome: string;
+  usuario: string;
 
-  @Column()
-  email: string;
-
-  @Column()
+  @Column({ select: false })
   senha: string;
-
-  @Column({ default: true })
-  ativo: boolean;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;

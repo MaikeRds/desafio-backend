@@ -14,22 +14,13 @@ export class CriarUsuario1604581880774 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'nome',
-            type: 'varchar',
-          },
-          {
-            name: 'email',
+            name: 'usuario',
             type: 'varchar',
             isUnique: true,
           },
           {
             name: 'senha',
             type: 'varchar',
-          },
-          {
-            name: 'ativo',
-            type: 'boolean',
-            default: 'false',
           },
           {
             name: 'created_at',
@@ -42,7 +33,7 @@ export class CriarUsuario1604581880774 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
         ],
-        uniques: [{ name: 'usuario_email', columnNames: ['email'] }],
+        uniques: [{ name: 'usuario_usuario', columnNames: ['usuario'] }],
       }),
     );
   }
