@@ -1,18 +1,18 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsuariosService } from './usuarios.service';
 import { IPayload } from 'src/shared/interfaces/IPayload';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usuariosService: UsuariosService,
+    private usuarioService: UsuarioService,
     private jwtService: JwtService,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usuariosService.findOneByNomeUsuario(username);
+    const user = await this.usuarioService.findOneByNomeUsuario(username);
     if (user && (await this.verifyPassword(pass, user.senha))) {
       const { id, usuario, senha } = user;
       return { id, usuario, senha };
@@ -21,7 +21,7 @@ export class AuthService {
   }
 
   async login(user: IPayload): Promise<any> {
-    const usuario = await this.usuariosService.findOne(user.id);
+    const usuario = await this.usuarioService.findOne(user.id);
     const payload = {
       username: usuario.usuario,
       sub: usuario.id,

@@ -1,22 +1,24 @@
-import { Usuario } from './../model/usuario.entity';
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsuariosService {
+export class UsuarioService {
   constructor(
     @InjectRepository(Usuario)
     private usuariosRepository: Repository<Usuario>,
   ) {}
-
-  async create(createUsuario: Usuario): Promise<Usuario> {
-    createUsuario.senha = await bcrypt.hash(createUsuario.senha, 10);
-    createUsuario.usuario = createUsuario.usuario.toLowerCase();
+  async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    console.log(createUsuarioDto);
+    createUsuarioDto.senha = await bcrypt.hash(createUsuarioDto.senha, 10);
+    createUsuarioDto.usuario = createUsuarioDto.usuario.toLowerCase();
 
     const usuario: Usuario = await this.usuariosRepository.findOne({
-      where: { usuario: createUsuario.usuario },
+      where: { usuario: createUsuarioDto.usuario },
     });
 
     if (usuario) {
@@ -26,10 +28,10 @@ export class UsuariosService {
       );
     }
 
-    return await this.usuariosRepository.save(createUsuario);
+    return await this.usuariosRepository.save(createUsuarioDto);
   }
 
-  async findAll(): Promise<Usuario[]> {
+  findAll(): Promise<Usuario[]> {
     return this.usuariosRepository.find();
   }
 
@@ -44,8 +46,11 @@ export class UsuariosService {
     });
   }
 
-  async updateOne(id: number, updateUsuario: Usuario): Promise<Usuario> {
-    updateUsuario.usuario = updateUsuario.usuario.toLowerCase();
+  async update(
+    id: number,
+    updateUsuarioDto: UpdateUsuarioDto,
+  ): Promise<Usuario> {
+    updateUsuarioDto.usuario = updateUsuarioDto.usuario.toLowerCase();
 
     const usuario: Usuario = await this.usuariosRepository.findOne(id);
 
@@ -54,7 +59,7 @@ export class UsuariosService {
     }
 
     const usuarioNome: Usuario = await this.usuariosRepository.findOne({
-      where: { usuario: updateUsuario.usuario },
+      where: { usuario: updateUsuarioDto.usuario },
     });
 
     if (usuarioNome) {
@@ -65,7 +70,7 @@ export class UsuariosService {
     }
 
     return await this.usuariosRepository.save({
-      usuario: updateUsuario.usuario,
+      usuario: updateUsuarioDto.usuario,
       id,
     });
   }
