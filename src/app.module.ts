@@ -10,6 +10,9 @@ import { AuthController } from './controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './shared/strategies/local.strategy';
 import { JwtStrategy } from './shared/strategies/jwt.strategy';
+import { Estabelecimento } from './model/estabelecimento.entity';
+import { EstabelecimentosController } from './controllers/estabelecimento.controller';
+import { EstabelecimentoService } from './services/estabelecimento.service';
 
 @Module({
   imports: [
@@ -24,17 +27,28 @@ import { JwtStrategy } from './shared/strategies/jwt.strategy';
       username: process.env.TYPEORM_USERNAME,
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
-      entities: [Usuario],
+      entities: [Usuario, Estabelecimento],
       synchronize: false,
       logging: true,
     }),
-    TypeOrmModule.forFeature([Usuario]),
+    TypeOrmModule.forFeature([Usuario, Estabelecimento]),
     JwtModule.register({
       secret: process.env.APP_KEY,
       signOptions: { expiresIn: '2h' },
     }),
   ],
-  controllers: [AppController, UsuariosController, AuthController],
-  providers: [UsuariosService, AuthService, LocalStrategy, JwtStrategy],
+  controllers: [
+    AppController,
+    UsuariosController,
+    AuthController,
+    EstabelecimentosController,
+  ],
+  providers: [
+    UsuariosService,
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    EstabelecimentoService,
+  ],
 })
 export class AppModule {}

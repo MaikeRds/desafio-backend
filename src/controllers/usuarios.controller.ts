@@ -20,15 +20,6 @@ export class UsuariosController {
   constructor(private usuariosService: UsuariosService) {}
 
   @ApiOperation({ summary: 'Criar usuário.' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        usuario: { type: 'string', description: 'Nome do usuário.' },
-        senha: { type: 'string', description: 'Senha do usuário.' },
-      },
-    },
-  })
   @Post()
   async create(@Body() usuario: Usuario): Promise<Usuario> {
     return this.usuariosService.create(usuario);
