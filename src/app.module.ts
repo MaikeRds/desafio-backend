@@ -6,6 +6,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { Usuario } from './usuario/entities/usuario.entity';
 import { EstabelecimentoModule } from './estabelecimento/estabelecimento.module';
 import { Estabelecimento } from './estabelecimento/entities/estabelecimento.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,17 +25,11 @@ import { Estabelecimento } from './estabelecimento/entities/estabelecimento.enti
       synchronize: false,
       logging: true,
     }),
-    /*
-    JwtModule.register({
-      secret: process.env.APP_KEY,
-      signOptions: { expiresIn: '2h' },
-    }),*/
     UsuarioModule,
     EstabelecimentoModule,
+    AuthModule,
   ],
-  controllers: [AppController /*AuthController, EstabelecimentosController*/],
-  providers: [
-    /*  AuthService  LocalStrategy, JwtStrategy, EstabelecimentoService*/
-  ],
+  controllers: [AppController],
+  providers: [],
 })
 export class AppModule {}

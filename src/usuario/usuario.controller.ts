@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Usuario } from './entities/usuario.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('[usuario]')
 @Controller('usuario')
@@ -27,7 +29,7 @@ export class UsuarioController {
 
   @ApiOperation({ summary: 'Listar usuários.' })
   @ApiBearerAuth()
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(): Promise<Usuario[]> {
     return this.usuarioService.findAll();
@@ -35,7 +37,7 @@ export class UsuarioController {
 
   @ApiOperation({ summary: 'Buscar usuário por ID.' })
   @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
     return this.usuarioService.findOne(id);
@@ -43,7 +45,7 @@ export class UsuarioController {
 
   @ApiOperation({ summary: 'Atualizar usuário.' })
   @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -54,7 +56,7 @@ export class UsuarioController {
 
   @ApiOperation({ summary: 'Deletar usuário.' })
   @ApiBearerAuth()
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<Usuario> {
     return this.usuarioService.remove(id);

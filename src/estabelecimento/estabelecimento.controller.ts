@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import {
   Controller,
   Get,
@@ -7,6 +8,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { EstabelecimentoService } from './estabelecimento.service';
 import { CreateEstabelecimentoDto } from './dto/create-estabelecimento.dto';
@@ -16,7 +18,7 @@ import { IEstabelecimento } from 'src/shared/interfaces/IEstabelecimento';
 
 @ApiBearerAuth()
 @ApiTags('[estabelecimento]')
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('estabelecimento')
 export class EstabelecimentoController {
   constructor(
