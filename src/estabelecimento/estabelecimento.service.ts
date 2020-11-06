@@ -1,7 +1,10 @@
-import { Estabelecimento } from './../model/estabelecimento.entity';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { CreateEstabelecimentoDto } from './dto/create-estabelecimento.dto';
+import { UpdateEstabelecimentoDto } from './dto/update-estabelecimento.dto';
+import { Estabelecimento } from './entities/estabelecimento.entity';
 
 @Injectable()
 export class EstabelecimentoService {
@@ -11,20 +14,22 @@ export class EstabelecimentoService {
   ) {}
 
   async create(
-    createEstabelecimento: Estabelecimento,
+    createEstabelecimentoDto: CreateEstabelecimentoDto,
   ): Promise<Estabelecimento> {
-    const esta: Estabelecimento = await this.estabelecimentoRepository.findOne({
-      where: { cnpj: createEstabelecimento.cnpj },
-    });
+    const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
+      {
+        where: { cnpj: createEstabelecimentoDto.cnpj },
+      },
+    );
 
-    if (esta) {
+    if (estabelecimento) {
       throw new HttpException(
         'Estabelecimento já existe!',
         HttpStatus.METHOD_NOT_ALLOWED,
       );
     }
 
-    return await this.estabelecimentoRepository.save(createEstabelecimento);
+    return await this.estabelecimentoRepository.save(createEstabelecimentoDto);
   }
 
   async findAll(): Promise<Estabelecimento[]> {
@@ -35,15 +40,15 @@ export class EstabelecimentoService {
     return this.estabelecimentoRepository.findOne(id);
   }
 
-  async updateOne(
+  async update(
     id: number,
-    updateEstabelecimento: Estabelecimento,
+    updateEstabelecimentoDto: UpdateEstabelecimentoDto,
   ): Promise<Estabelecimento> {
-    const esta: Estabelecimento = await this.estabelecimentoRepository.findOne(
+    const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
       id,
     );
 
-    if (!esta) {
+    if (!estabelecimento) {
       throw new HttpException(
         'Estabelecimento não encontrado!',
         HttpStatus.NOT_FOUND,
@@ -52,33 +57,33 @@ export class EstabelecimentoService {
 
     const VerificarCnpj: Estabelecimento = await this.estabelecimentoRepository.findOne(
       {
-        where: { cnpj: updateEstabelecimento.cnpj },
+        where: { cnpj: updateEstabelecimentoDto.cnpj },
         select: ['cnpj'],
       },
     );
 
-    if (VerificarCnpj && VerificarCnpj.cnpj !== esta.cnpj) {
+    if (VerificarCnpj && VerificarCnpj.cnpj !== estabelecimento.cnpj) {
       throw new HttpException('CNPJ já existe!', HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     return await this.estabelecimentoRepository.save({
       id,
-      ...updateEstabelecimento,
+      ...updateEstabelecimentoDto,
     });
   }
 
   async remove(id: number): Promise<Estabelecimento> {
-    const estabele: Estabelecimento = await this.estabelecimentoRepository.findOne(
+    const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
       id,
     );
 
-    if (!estabele) {
+    if (!estabelecimento) {
       throw new HttpException(
         'Estabelecimento não encontrado!',
         HttpStatus.NOT_FOUND,
       );
     }
 
-    return await this.estabelecimentoRepository.remove(estabele);
+    return await this.estabelecimentoRepository.remove(estabelecimento);
   }
 }
