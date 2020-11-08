@@ -81,6 +81,10 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/auth/guards",
+      "<rootDir>/auth/strategies"
+    ],
     "testEnvironment": "node"
   }
 }

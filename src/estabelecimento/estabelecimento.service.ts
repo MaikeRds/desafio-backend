@@ -40,10 +40,7 @@ export class EstabelecimentoService {
     return this.estabelecimentoRepository.findOne(id);
   }
 
-  async update(
-    id: number,
-    updateEstabelecimentoDto: UpdateEstabelecimentoDto,
-  ): Promise<Estabelecimento> {
+  async findEstabelecimentoById(id: number): Promise<Estabelecimento> {
     const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
       id,
     );
@@ -55,14 +52,20 @@ export class EstabelecimentoService {
       );
     }
 
-    const VerificarCnpj: Estabelecimento = await this.estabelecimentoRepository.findOne(
+    return estabelecimento;
+  }
+
+  async update(
+    id: number,
+    updateEstabelecimentoDto: UpdateEstabelecimentoDto,
+  ): Promise<Estabelecimento> {
+    const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
       {
         where: { cnpj: updateEstabelecimentoDto.cnpj },
-        select: ['cnpj'],
       },
     );
 
-    if (VerificarCnpj && VerificarCnpj.cnpj !== estabelecimento.cnpj) {
+    if (estabelecimento && estabelecimento.id !== id) {
       throw new HttpException('CNPJ já existe!', HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -72,18 +75,7 @@ export class EstabelecimentoService {
     });
   }
 
-  async remove(id: number): Promise<Estabelecimento> {
-    const estabelecimento: Estabelecimento = await this.estabelecimentoRepository.findOne(
-      id,
-    );
-
-    if (!estabelecimento) {
-      throw new HttpException(
-        'Estabelecimento não encontrado!',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
+  async remove(estabelecimento: Estabelecimento): Promise<Estabelecimento> {
     return await this.estabelecimentoRepository.remove(estabelecimento);
   }
 }

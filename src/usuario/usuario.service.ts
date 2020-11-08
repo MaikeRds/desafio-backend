@@ -13,7 +13,6 @@ export class UsuarioService {
     private usuariosRepository: Repository<Usuario>,
   ) {}
   async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    console.log(createUsuarioDto);
     createUsuarioDto.senha = await bcrypt.hash(createUsuarioDto.senha, 10);
     createUsuarioDto.usuario = createUsuarioDto.usuario.toLowerCase();
 
@@ -58,11 +57,11 @@ export class UsuarioService {
       throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
     }
 
-    const usuarioNome: Usuario = await this.usuariosRepository.findOne({
+    const existeUsuario: Usuario[] = await this.usuariosRepository.find({
       where: { usuario: updateUsuarioDto.usuario },
     });
 
-    if (usuarioNome) {
+    if (existeUsuario && existeUsuario.length > 0) {
       throw new HttpException(
         'Usuário já existe!',
         HttpStatus.METHOD_NOT_ALLOWED,

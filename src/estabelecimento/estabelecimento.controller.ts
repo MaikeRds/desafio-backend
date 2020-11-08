@@ -53,6 +53,7 @@ export class EstabelecimentoController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateEstabelecimentoDto: UpdateEstabelecimentoDto,
   ): Promise<IEstabelecimento> {
+    await this.estabelecimentoService.findEstabelecimentoById(id);
     return await this.estabelecimentoService.update(
       id,
       updateEstabelecimentoDto,
@@ -64,6 +65,10 @@ export class EstabelecimentoController {
   async remove(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<IEstabelecimento> {
-    return await this.estabelecimentoService.remove(id);
+    const estabelecimento: IEstabelecimento = await this.estabelecimentoService.findEstabelecimentoById(
+      id,
+    );
+
+    return await this.estabelecimentoService.remove(estabelecimento);
   }
 }
