@@ -1,5 +1,3 @@
-# README - DESAFIO
-
 # Descrição do projeto
 
 > Gerenciamento de Estabelecimento.
