@@ -81,7 +81,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-### Frontend (Angular)
+### 🎲 Frontend (Angular)
 
 Este projeto foi gerado com Angular CLI version 10.0.8.
 
